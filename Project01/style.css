@@ -1,0 +1,38 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #708090;
+    height: 100vh;
+    width: 100vw;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 560px;
+    width: 900px;
+    background-color: #fff;
+}
+
+@media (min-width: 1000px) {
+    .container {
+        box-shadow: 2px 2px 20px;
+    }
+}
+.tick {
+    color: red;
+}
+
+div.bar {
+    display: inline-block;
+    width: 20px;
+    height: 75px;
+    background-color: teal;
+}
