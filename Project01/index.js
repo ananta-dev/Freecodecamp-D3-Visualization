@@ -1,25 +1,47 @@
-fetchData = async url => {
-    const response = await fetch(url);
-    const dataPromise = await response.json();
-    return dataPromise;
-};
+// fetchData = async url => {
+//     const response = await fetch(url);
+//     const dataPromise = await response.json();
+//     return dataPromise;
+// };
 
 const createChart = dataset => {
     const w = 800;
     const h = 500;
-    const padding = 60;
+    const padding = 40;
 
-    console.log(dataset);
+    console.log("dataset: ", dataset);
+    console.log("[dataset[0][0]: ", dataset[0][0]);
+    console.log(
+        "dataset[dataset.length - 1][0]: ",
+        dataset[dataset.length - 1][0]
+    );
+
+    // const xScale = d3
+    //     .scaleTime()
+    //     .domain([dataset[0][0], dataset[dataset.length - 1][0]]);
+    // .ticks(10);
+    // .domain([padding, w - padding])
+    // .range([padding, w - padding]);
+
+    const parseTime = d3.timeParse("%Y-%m-%d");
 
     const xScale = d3
-        .scaleLinear()
-        // .domain([0, d3.max(dataset, d => d)])
-        .domain([padding, w - padding])
+        .scaleTime()
+        .domain([
+            d3.min(dataset, d => parseTime(d[0])),
+            d3.max(dataset, d => parseTime(d[0])),
+        ])
         .range([padding, w - padding]);
+
+    console.log("xScale", xScale);
+    console.log("xScale.domain()", xScale.domain());
 
     const yBaseline = h - padding;
 
-    const yScale = d3.scaleLinear().domain([0, h]).range([yBaseline, padding]);
+    const yScale = d3
+        .scaleLinear()
+        .domain([0, d3.max(dataset, d => d[1])])
+        .range([yBaseline, padding]);
 
     const svg = d3
         .select(".chart")
@@ -59,11 +81,11 @@ const createChart = dataset => {
         .enter()
         .append("rect")
         .attr("class", "bar")
-        .attr("width", "4")
-        .attr("height", d => `${yBaseline - yScale(d)}`)
-        .attr("fill", "lightblue")
-        .attr("y", (d, i) => `${yScale(d)}`)
-        .attr("x", (d, i) => `${padding + 1 + i * 4.2}`);
+        .attr("width", "1")
+        .attr("height", d => `${yBaseline - yScale(d[1])}`)
+        .attr("fill", "blue")
+        .attr("y", (d, i) => `${yScale(d[1])}`)
+        .attr("x", (d, i) => xScale(parseTime(d[0])));
 
     // attr("data-date", function (d, i) {
     //     return datas[i][0];
@@ -88,9 +110,13 @@ const createChart = dataset => {
 const dataUrl =
     "https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json";
 
-fetchData(dataUrl).then(retrievedObject => {
-    createChart(retrievedObject);
+d3.json(dataUrl).then(retrievedObject => {
+    createChart(retrievedObject.data);
 });
+
+// fetchData(dataUrl).then(retrievedObject => {
+//     createChart(retrievedObject);
+// });
 
 // -----------------------------------
 //          Older code
