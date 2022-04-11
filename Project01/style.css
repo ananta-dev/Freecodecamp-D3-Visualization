@@ -3,6 +3,11 @@
     padding: 0;
 }
 
+html {
+    /* 62.5% of 16px base font size is 10px */
+    font-size: 62.5%;
+}
+
 .main {
     display: flex;
     align-items: center;
@@ -14,11 +19,20 @@
 
 .container {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 560px;
+    height: 600px;
     width: 900px;
     background-color: #fff;
+    padding: 2rem;
+}
+
+#title {
+    font-size: 2.5rem;
+    font-family: sans-serif;
+    font-weight: bold;
+    margin-top: 2rem;
 }
 
 @media (min-width: 1000px) {
@@ -27,7 +41,7 @@
     }
 }
 .tick {
-    color: red;
+    color: darkcyan;
 }
 
 div.bar {
