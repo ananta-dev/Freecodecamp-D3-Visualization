@@ -31,11 +31,7 @@ const createChart = data => {
         .append("div")
         .attr("id", "tooltip")
         .style("position", "absolute")
-        .style("visibility", "hidden")
-        .text("tooltip ready")
-        .attr("width", 100)
-        .attr("height", 100)
-        .attr("background-color", "cyan");
+        .style("visibility", "hidden");
 
     const barWidth = (w - 2 * padding) / data.length;
     console.log("barwidth: ", barWidth);
@@ -46,27 +42,34 @@ const createChart = data => {
         .enter()
         .append("rect")
         .on("mouseover", d => {
-            console.log("I am in the mouseover function!");
-            console.log("d: ", d);
-            console.log("typeof d: ", typeof d);
-            return tooltip
+            tooltip
+                .html("<p>" + d[0] + "<br>" + d[1] + "</p>")
+                .transition()
+                .duration(200)
                 .style("visibility", "visible")
-                .style("opacity", 1)
-                .text(d[1]);
-            // d3.select("#tooltip").style("opacity", 1).text(d[1]);
+                .style("opacity", 0.9)
+                .style("left", d3.event.pageX - 110 + "px")
+                .style("top", d3.event.pageY - 50 + "px")
+                .attr("data-date", d[0])
+                .attr("data-gdp", d[1]);
         })
         .on("mousemove", () => {
-            return tooltip.style("top", 400 + "px").style("left", 800 + "px");
+            tooltip
+                .style("left", d3.event.pageX - 110 + "px")
+                .style("top", d3.event.pageY - 50 + "px");
         })
         .on("mouseout", () => {
-            return tooltip.style("visibility", "hidden");
+            tooltip
+                .transition()
+                .duration(500)
+                .style("visibility", "hidden")
+                .style("opacity", 0);
         })
         .attr("data-date", d => d[0])
         .attr("data-gdp", d => d[1])
         .attr("class", "bar")
         .attr("width", barWidth + "px")
         .attr("height", d => yBaseline - yScale(d[1]) + "px")
-        .attr("fill", "darkcyan")
         .attr("y", (d, i) => yScale(d[1]))
         .attr("x", d => xScale(parseDate(d[0])));
 
