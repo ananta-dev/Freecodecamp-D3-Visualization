@@ -26,6 +26,17 @@ const createChart = data => {
         .attr("width", w)
         .attr("height", h);
 
+    const tooltip = d3
+        .select(".chart")
+        .append("div")
+        .attr("id", "tooltip")
+        .style("position", "absolute")
+        .style("visibility", "hidden")
+        .text("tooltip ready")
+        .attr("width", 100)
+        .attr("height", 100)
+        .attr("background-color", "cyan");
+
     const barWidth = (w - 2 * padding) / data.length;
     console.log("barwidth: ", barWidth);
 
@@ -34,6 +45,22 @@ const createChart = data => {
         .data(data)
         .enter()
         .append("rect")
+        .on("mouseover", d => {
+            console.log("I am in the mouseover function!");
+            console.log("d: ", d);
+            console.log("typeof d: ", typeof d);
+            return tooltip
+                .style("visibility", "visible")
+                .style("opacity", 1)
+                .text(d[1]);
+            // d3.select("#tooltip").style("opacity", 1).text(d[1]);
+        })
+        .on("mousemove", () => {
+            return tooltip.style("top", 400 + "px").style("left", 800 + "px");
+        })
+        .on("mouseout", () => {
+            return tooltip.style("visibility", "hidden");
+        })
         .attr("data-date", d => d[0])
         .attr("data-gdp", d => d[1])
         .attr("class", "bar")
@@ -55,11 +82,6 @@ const createChart = data => {
         .attr("transform", "translate(" + padding + ",0)")
         .call(yAxisGenerator)
         .attr("id", "y-axis");
-
-    d3.select("body")
-        .append("div")
-        .attr("id", "tooltop")
-        .attr("style", "position: absolute; opacity: 0;");
 };
 
 const dataUrl =
