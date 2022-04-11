@@ -34,7 +34,6 @@ const createChart = data => {
         .style("visibility", "hidden");
 
     const barWidth = (w - 2 * padding) / data.length;
-    console.log("barwidth: ", barWidth);
 
     svg.append("svg")
         .selectAll("rect")
